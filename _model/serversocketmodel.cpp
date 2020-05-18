@@ -14,6 +14,7 @@ ServerSocketModel::ServerSocketModel(RemoteControlInterface *remote_control)
     _client =nullptr;
     _server = new QTcpServer;
     _state = STATE::S_NO;
+    connect(_server, &QTcpServer::newConnection, this, &ServerSocketModel::acceptHandle);
 }
 ServerSocketModel::~ServerSocketModel()
 {
@@ -85,7 +86,6 @@ bool ServerSocketModel::start(QString name,QString passwd,int port,QString ip)
     }
     _state = STATE::S_READY;
     //_ip = getServerAddress();//getNowIp();
-    connect(_server, &QTcpServer::newConnection, this, &ServerSocketModel::acceptHandle);
     return true;
 
 }
@@ -107,7 +107,7 @@ void ServerSocketModel::readHanele(QTcpSocket *client)
         }
         switch (buf[LEN_SIZE])
         {
-            case MESSAGE_FLAGS::PW:
+        case MESSAGE_FLAGS::PW:
                 recvPW(buf + LEN_SIZE,datalen - LEN_SIZE);
             break;
         case MESSAGE_FLAGS::END:
@@ -149,17 +149,21 @@ void ServerSocketModel::close()
 }
 void ServerSocketModel::acceptHandle()
 {
-    QTcpSocket *clientConnection = _server->nextPendingConnection();
-    connect(clientConnection, &QAbstractSocket::disconnected,[&]
+    /*只允许有一个连接*/
+    if(_client ==nullptr)
     {
-        disConnectHandle(clientConnection);
-    });
-    //连接读请求
-    connect(clientConnection,&QAbstractSocket::readyRead,[&](){
-        readHanele(clientConnection);
-    });
-    _client = clientConnection;
-    _state = STATE ::S_ACCPET;
+        QTcpSocket *clientConnection = _server->nextPendingConnection();
+        connect(clientConnection, &QAbstractSocket::disconnected,[&]
+        {
+            disConnectHandle(clientConnection);
+        });
+        //连接读请求
+        connect(clientConnection,&QAbstractSocket::readyRead,[&](){
+            readHanele(clientConnection);
+        });
+        _client = clientConnection;
+        _state = STATE ::S_ACCPET;
+    }
 }
 void ServerSocketModel::disConnectHandle(QTcpSocket *client)
 {

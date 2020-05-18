@@ -42,7 +42,7 @@ private:
     void initDialog(ConnectDialog *dialog);
     void initGame(QString selfname,QString remotename,int timeout = 600);
     void exitHandle();
-    void gameOverHandle(ChessColorPro );
+    void gameOverHandle(ChessColorPro );//传入胜利着的颜色
     BoardModel * boardmodel;
     Chesser *whiteer,*blacker;
     BoardFrame * boardframe;

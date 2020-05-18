@@ -14,7 +14,7 @@
 #include "clientsocketmodel.h"
 class BoardModelInterface;
 class ControlInterface;
-class ClientNetworkControl:public ControlInterface,public RemoteControlInterface
+class ClientNetworkControl:public ControlInterface,public RemoteControlInterface,public QObject
 {
 public:
     ClientNetworkControl();
@@ -32,7 +32,7 @@ public:
     void start();
     ~ClientNetworkControl();
 private :
-    using  CLIENT_STATE = enum{CW_PWOK,CW_NAME,CW_POS,CW_RUNING,CW_END} ;
+    using  CLIENT_STATE = enum{C_NOBEGIN,CW_PWOK,CW_NAME,CW_POS,C_RUNING,C_END,C_SELF} ;
     CLIENT_STATE _state;
     void DialogEnterHandle(ConnectDialog *dialog);
     void DialogCancelHandle(ConnectDialog *dialog);

@@ -14,6 +14,7 @@ ServerNetworkControl::ServerNetworkControl()
     frame = nullptr;
     showinfo_ui = nullptr;
     boardframe = nullptr;
+    _dialog = nullptr;
 
 }
 ServerNetworkControl::~ServerNetworkControl()

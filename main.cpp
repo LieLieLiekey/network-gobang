@@ -11,12 +11,13 @@
 #include "servernetworkcontrol.h"
 #include <QDebug>
 #include <QMessageBox>
+#include <clientnetworkcontrol.h>
 int main(int argc, char *argv[])
 {
    QApplication a(argc, argv);
 
-//   ServerNetworkControl dch;
-//   dch.start();
-//   a.exec();
+   ClientNetworkControl dch;
+   dch.start();
+   a.exec();
    return 0;
 }

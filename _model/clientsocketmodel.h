@@ -1,18 +1,20 @@
 #ifndef CLIENTSOCKETMODEL_H
 #define CLIENTSOCKETMODEL_H
+
 #include "socketinterface.h"
 #include <QTcpServer>
 #include <QTcpSocket>
 #include "remotecontrolinterface.h"
 class RemoteControlInterface;
 class SocketInterface;
+
 class ClientSocketModel:public SocketInterface,public QObject
 {
 public:
     ClientSocketModel(RemoteControlInterface * remote_control);
-    virtual void sendPOS(int x,int y)override;
-    virtual void sendEXIT()override;
-    virtual void sendGIVEUP()override;
+    void sendPOS(int x,int y)override;
+    void sendEXIT()override;
+    void sendGIVEUP()override;
     void sendPW();//发送pw和自己的名字
     void writeData(char buf[],int len);
 
@@ -29,18 +31,20 @@ public:
     int getServerPort();
     ~ClientSocketModel();
 
-    virtual QString getRemoteName()override;
-    virtual bool alreadyBegin()override;
+    QString getRemoteName()override;
+    bool alreadyBegin()override;
+
+private:
 
     static constexpr int BUFSIZE = 256;
     static constexpr int sendbuf_size=16;
-     char send_buf [sendbuf_size];
-private:
-   QString _selfname,_remote_name,_passwd,_ip;
-   int _port;
-   RemoteControlInterface * _remote_control;
-   QTcpSocket *_client;
-   using STATE = enum{S_NO,S_READY,S_ACCPET,S_RECVPW,S_SENDPW,S_START,S_END};
-   STATE _state;
+    char send_buf [sendbuf_size];
+    QString _selfname,_remote_name,_passwd,_ip;
+    int _port;
+    RemoteControlInterface * _remote_control;
+    QTcpSocket *_client;
+    using STATE = enum{NO,READY,ACCPET,RECVPW,SENDPW,START,END};
+    STATE _state;
 };
 
+#endif
