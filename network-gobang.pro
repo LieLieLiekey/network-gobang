@@ -17,61 +17,59 @@ DEFINES += QT_DEPRECATED_WARNINGS
 msvc:QMAKE_CXXFLAGS += -execution-charset:utf-8
 msvc:QMAKE_CXXFLAGS += -source-charset:utf-8
 QMAKE_CXXFLAGS_WARN_ON += -wd4819
-SOURCES += \
-    boardframe.cpp \
-    boardmodel.cpp \
-    boardmodelinterface.cpp \
-    chesser.cpp \
-    chesserai.cpp \
-    chesserman.cpp \
-    clientnetworkcontrol.cpp \
-    clientsocketmodel.cpp \
-    connectdialog.cpp \
-    controlinterface.cpp \
-    localcontrol.cpp \
-    main.cpp \
-    networkcontrol.cpp \
-    observable.cpp \
-    observer.cpp \
-    position.cpp \
-    remotecontrolinterface.cpp \
-    selectmodeldialogui.cpp \
-    servernetworkcontrol.cpp \
-    serversocketmodel.cpp \
-    showinfoframeui.cpp \
-    socketinterface.cpp \
-    tcptest.cpp
+SOURCES += \ \
+    _control/clientnetworkcontrol.cpp \
+    _control/controlinterface.cpp \
+    _control/localcontrol.cpp \
+    _control/networkcontrol.cpp \
+    _control/remotecontrolinterface.cpp \
+    _control/servernetworkcontrol.cpp \
+    _model/boardmodel.cpp \
+    _model/boardmodelinterface.cpp \
+    _model/chesser.cpp \
+    _model/chesserai.cpp \
+    _model/chesserman.cpp \
+    _model/clientsocketmodel.cpp \
+    _model/observable.cpp \
+    _model/observer.cpp \
+    _model/position.cpp \
+    _model/serversocketmodel.cpp \
+    _model/socketinterface.cpp \
+    _view/boardframe.cpp \
+    _view/connectdialog.cpp \
+    _view/selectmodeldialogui.cpp \
+    _view/showinfoframeui.cpp \
+    main.cpp
 
-HEADERS += \
-    ChessColorPro.h \
-    boardframe.h \
-    boardmodel.h \
-    boardmodelinterface.h \
-    chesser.h \
-    chesserai.h \
-    chesserman.h \
-    clientnetworkcontrol.h \
-    clientsocketmodel.h \
-    connectdialog.h \
-    controlinterface.h \
-    localcontrol.h \
-    networkcontrol.h \
-    observable.h \
-    observer.h \
-    position.h \
-    remotecontrolinterface.h \
-    selectmodeldialogui.h \
-    servernetworkcontrol.h \
-    serversocketmodel.h \
-    showinfoframeui.h \
-    socketinterface.h \
-    tcptest.h
+HEADERS += \ \
+    _control/clientnetworkcontrol.h \
+    _control/controlinterface.h \
+    _control/localcontrol.h \
+    _control/networkcontrol.h \
+    _control/remotecontrolinterface.h \
+    _control/servernetworkcontrol.h \
+    _model/ChessColorPro.h \
+    _model/boardmodel.h \
+    _model/boardmodelinterface.h \
+    _model/chesser.h \
+    _model/chesserai.h \
+    _model/chesserman.h \
+    _model/clientsocketmodel.h \
+    _model/observable.h \
+    _model/observer.h \
+    _model/position.h \
+    _model/serversocketmodel.h \
+    _model/socketinterface.h \
+    _view/boardframe.h \
+    _view/connectdialog.h \
+    _view/selectmodeldialogui.h \
+    _view/showinfoframeui.h
 
-FORMS += \
-    connectdialog.ui \
-    selectmodeldialogui.ui \
-    showinfoframeui.ui \
-    tcptest.ui
+FORMS += \ \
+    _view/connectdialog.ui \
+    _view/selectmodeldialogui.ui \
+    _view/showinfoframeui.ui
+
 
 # Default rules for deployment.
 qnx: target.path = /tmp/$${TARGET}/bin
@@ -82,3 +80,8 @@ RESOURCES += \
     image.qrc
 
 DISTFILES +=
+
+INCLUDEPATH += \ \
+_control/ \
+_model/ \
+_view/ \
