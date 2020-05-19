@@ -50,7 +50,6 @@ private:
     QFrame *frame;
     ServerSocketModel * servermodel;
     ConnectDialog * _dialog;
-    using END_FLAGS=enum{TIMEOUT,GAVEUP,END,NOEND};
     END_FLAGS end_flag;
 };
 

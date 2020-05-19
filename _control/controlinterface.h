@@ -11,6 +11,7 @@ public:
     virtual void giveUpSignal(ChessColorPro )=0;
     virtual void exitSignal(ChessColorPro)=0;
     virtual void timeOutSingal(ChessColorPro)=0;
+    using END_FLAGS=enum{TIMEOUT,GAVEUP,END,RUN,NOSTART};
 };
 
 #endif // CONTROLINTERFACE_H

@@ -5,7 +5,7 @@
 ServerNetworkControl::ServerNetworkControl()
 {
     _state = SERVER_STATE::S_NOBEGIN;
-    end_flag = END_FLAGS::NOEND;
+    end_flag = END_FLAGS::NOSTART;
     servermodel = new ServerSocketModel(this);
     boardmodel = nullptr;
     whiteer= nullptr;
@@ -86,6 +86,7 @@ void ServerNetworkControl::exitSignal(ChessColorPro)
       case QMessageBox::Yes:
         //yes
         _state = SERVER_STATE::S_END;
+        end_flag = END_FLAGS::GAVEUP;
         servermodel->sendEXIT();/***********/
         exitHandle();
           break;
@@ -149,7 +150,7 @@ void ServerNetworkControl::remoteTimeOutSignal()
 
 void ServerNetworkControl::remoteDisConnectSignal()
 {
-    if(end_flag==END_FLAGS::NOEND)
+    if(end_flag==END_FLAGS::RUN)
         remoteExitSignal();
 }
 
@@ -208,7 +209,7 @@ void ServerNetworkControl::initGame(QString selfname,QString remotename,int time
     showinfo_ui->move(550,0);
     /*UI窗口的组合完毕*/
 
-    end_flag =END_FLAGS::NOEND;
+    end_flag =END_FLAGS::RUN;
     /*初始化完毕*/
 
     frame->show();
@@ -300,6 +301,7 @@ void ServerNetworkControl::DialogExitHandle(ConnectDialog *dialog)
 void ServerNetworkControl::exitHandle()
 {
     frame->close();
+    exit(0);
 }
 
 void ServerNetworkControl::gameOverHandle(ChessColorPro who)

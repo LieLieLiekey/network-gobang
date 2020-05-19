@@ -28,6 +28,7 @@ LocalControl::LocalControl()
      boardmodel = nullptr;
      whiteer = nullptr;
      blacker =nullptr;
+    end_flag = END_FLAGS ::NOSTART;
 }
 void LocalControl::setAIModel(QString black_name)
 {
@@ -199,7 +200,7 @@ void LocalControl::start(int timeout)
     showinfo_ui->move(550,0);
     /*UI窗口的组合完毕*/
 
-    end_flag = LocalControl::NOEND;
+    end_flag = END_FLAGS::RUN;
     /*初始化完毕*/
 
     frame->show();

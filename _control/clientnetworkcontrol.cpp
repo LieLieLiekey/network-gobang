@@ -11,7 +11,7 @@ exit之后，界面关闭，但并不会析构
 ClientNetworkControl::ClientNetworkControl()
 {
     _state = CLIENT_STATE::C_NOBEGIN;
-    end_flag = END_FLAGS::NOEND;
+    end_flag = END_FLAGS::NOSTART;
     clientmodel = new ClientSocketModel(this);
     boardmodel = nullptr;
     whiteer= nullptr;
@@ -111,6 +111,7 @@ void ClientNetworkControl::exitSignal(ChessColorPro)
       case QMessageBox::Yes:
         //yes
         _state = CLIENT_STATE::C_END;
+        end_flag = END_FLAGS::GAVEUP;
         clientmodel->sendEXIT();/***********/
         exitHandle();
           break;
@@ -176,8 +177,9 @@ void ClientNetworkControl::remoteTimeOutSignal()
 
 void ClientNetworkControl::remoteDisConnectSignal()
 {
-    if(end_flag==END_FLAGS::NOEND)
+    if(end_flag==END_FLAGS::RUN)
         remoteExitSignal();
+
 }
 
 void ClientNetworkControl::remoteBeginGameSignal()
@@ -302,7 +304,7 @@ void ClientNetworkControl::initGame(QString selfname,QString remotename,int time
         showinfo_ui->move(550,0);
         /*UI窗口的组合完毕*/
 
-        end_flag =END_FLAGS::NOEND;
+        end_flag = END_FLAGS::RUN;
         /*初始化完毕*/
 
         frame->show();
@@ -313,6 +315,7 @@ void ClientNetworkControl::initGame(QString selfname,QString remotename,int time
 void ClientNetworkControl::exitHandle()
 {
     frame->close();
+    exit(0);
 }
 
 void ClientNetworkControl::gameOverHandle(ChessColorPro who)

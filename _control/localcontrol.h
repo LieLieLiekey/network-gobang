@@ -36,7 +36,6 @@ private :
     ShowInfoFrameUi *showinfo_ui;
     QFrame *frame;
     using GAME_MODEL=enum{AI_MODEL,DOUBLE_MODEL,DOG_MODEL};
-    using END_FLAGS=enum{TIMEOUT,GAVEUP,END,NOEND};
     END_FLAGS end_flag;
     GAME_MODEL game_model;
 };
