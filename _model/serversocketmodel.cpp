@@ -19,7 +19,8 @@ void ServerSocketModel::recvMessage(char buf[],int len)
 {
     len--,buf++;
     QString msg;
-    for(int i=0;i<len;++i) msg.append(buf[i]);
+    msg = QString::fromUtf8(buf,len);
+//    for(int i=0;i<len;++i) msg.append(buf[i]);
     _remote_control ->remoteMessageSignal(msg);
 }
 ServerSocketModel::ServerSocketModel(RemoteControlInterface *remote_control)
