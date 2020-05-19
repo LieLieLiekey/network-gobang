@@ -16,6 +16,10 @@
 #include <QMessageBox>
 void ClientSocketModel::errorHandle()
 {
+    if(_state == STATE::NO||_state ==STATE::END)//提前按取消键了
+    {
+           return ;
+    }
     QMessageBox msg;
     QString info;
     switch (_client->error())
@@ -203,13 +207,13 @@ void ClientSocketModel::close()
 void ClientSocketModel::disConnectHandle(QTcpSocket *client)
 {
     _client->close();
-    _remote_control ->remoteDisConnectSignal();
+    if(!(_state == STATE::NO || _state == STATE::END))
+        _remote_control ->remoteDisConnectSignal();
     _state = STATE::NO;
 }
 
 void ClientSocketModel::connectHandle(QTcpSocket *client)
 {
-    qDebug() << client ->state() <<endl;
     sendPW();
    _state = STATE::START;
 }

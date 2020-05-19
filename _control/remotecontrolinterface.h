@@ -2,6 +2,7 @@
 #define REMOTECONTROLINTERFACE_H
 #include <position.h>
 #include "ChessColorPro.h"
+#include <QString>
 class RemoteControlInterface
 {
 public:
@@ -12,6 +13,8 @@ public:
     virtual void remoteDisConnectSignal()=0;
     virtual void remoteBeginGameSignal()=0;
     virtual void remotePasswdCurrect()=0;
+    using  EXCEPT_LEVEL = enum{NO,LOW,MID,HIGH,SERIOUS};
+    virtual void errorHanle(EXCEPT_LEVEL level,QString errormsg);
     static constexpr ChessColorPro SERVER_COLOR = ChessColorPro::BLACK;
     static constexpr ChessColorPro CLIENT_COLOR = ChessColorPro::WHITE;
 };

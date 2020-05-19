@@ -157,6 +157,7 @@ void ServerSocketModel::acceptHandle()
         connect(clientConnection,&QAbstractSocket::readyRead,[&](){
             readHanele(clientConnection);
         });
+
         _client = clientConnection;
         _state = STATE ::ACCPET;
     }

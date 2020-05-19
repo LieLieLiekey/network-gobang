@@ -146,6 +146,9 @@ void ClientNetworkControl::remotePutChessSignal(Position pos)
             gameOverHandle(boardmodel->whoWin());
         }
     }
+    else{
+        errorHanle(EXCEPT_LEVEL::MID,"remote put chess positon error.");
+    }
 
 }
 
@@ -173,7 +176,8 @@ void ClientNetworkControl::remoteTimeOutSignal()
 
 void ClientNetworkControl::remoteDisConnectSignal()
 {
-    remoteExitSignal();
+    if(end_flag==END_FLAGS::NOEND)
+        remoteExitSignal();
 }
 
 void ClientNetworkControl::remoteBeginGameSignal()
