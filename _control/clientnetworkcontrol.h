@@ -12,6 +12,7 @@
 #include "boardframe.h"
 #include "showinfoframeui.h"
 #include "clientsocketmodel.h"
+#include "chatframeui.h"
 class BoardModelInterface;
 class ControlInterface;
 class ClientNetworkControl:public ControlInterface,public RemoteControlInterface,public QObject
@@ -29,6 +30,7 @@ public:
     void remoteDisConnectSignal() override;
     void remoteBeginGameSignal() override;
     void remotePasswdCurrect() override;
+    void remoteMessageSignal(QString) override;
     void start();
     ~ClientNetworkControl();
 private :
@@ -49,6 +51,7 @@ private :
     ClientSocketModel * clientmodel;
     ConnectDialog * _dialog;
     END_FLAGS end_flag;
+     ChatFrameui *chatfram;
 };
 
 #endif // CLIENTNETWORKCONTROL_H

@@ -19,6 +19,7 @@ ClientNetworkControl::ClientNetworkControl()
 
     frame = nullptr;
     showinfo_ui = nullptr;
+     chatfram = nullptr;
     boardframe = nullptr;
     _dialog = nullptr;
 }
@@ -71,6 +72,15 @@ void ClientNetworkControl::putChessSignal(Position pos)
             gameOverHandle(boardmodel->whoWin());
         }
     }
+}
+void ClientNetworkControl::remoteMessageSignal(QString info)
+{
+     if(chatfram == nullptr){
+         errorHanle(EXCEPT_LEVEL::MID,"no begin, but recive a message.");
+     }
+     else{
+         chatfram ->appendMessage(clientmodel ->getRemoteName(),info);
+     }
 }
 void ClientNetworkControl::giveUpSignal(ChessColorPro )
 {

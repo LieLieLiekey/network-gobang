@@ -12,6 +12,7 @@
 #include "boardmodel.h"
 #include "boardframe.h"
 #include "serversocketmodel.h"
+#include "chatframeui.h"
 class BoardModelInterface;
 class ControlInterface;
 
@@ -31,6 +32,7 @@ public:
     void remoteDisConnectSignal() override;
     void remoteBeginGameSignal() override;
     void remotePasswdCurrect() override;
+    void remoteMessageSignal(QString) override;
     void start();
     ~ServerNetworkControl();
 private:
@@ -51,6 +53,7 @@ private:
     ServerSocketModel * servermodel;
     ConnectDialog * _dialog;
     END_FLAGS end_flag;
+    ChatFrameui *chatfram;
 };
 
 #endif // SERVERNETWORKCONTROL_H

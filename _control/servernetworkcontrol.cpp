@@ -13,6 +13,7 @@ ServerNetworkControl::ServerNetworkControl()
 
     frame = nullptr;
     showinfo_ui = nullptr;
+    chatfram = nullptr;
     boardframe = nullptr;
     _dialog = nullptr;
 
@@ -153,7 +154,15 @@ void ServerNetworkControl::remoteDisConnectSignal()
     if(end_flag==END_FLAGS::RUN)
         remoteExitSignal();
 }
-
+void ServerNetworkControl::remoteMessageSignal(QString info)
+{
+     if(chatfram == nullptr){
+         errorHanle(EXCEPT_LEVEL::MID,"no begin, but recive a message.");
+     }
+     else{
+         chatfram ->appendMessage(servermodel ->getRemoteName(),info);
+     }
+}
 void ServerNetworkControl::remoteBeginGameSignal()
 {
     _state = SERVER_STATE::S_SELF;

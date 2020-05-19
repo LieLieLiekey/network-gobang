@@ -39,6 +39,7 @@ SOURCES += \
     _view/connectdialog.cpp \
     _view/selectmodeldialogui.cpp \
     _view/showinfoframeui.cpp \
+    chatframeui.cpp \
     main.cpp
 
 HEADERS += \
@@ -63,12 +64,14 @@ HEADERS += \
     _view/boardframe.h \
     _view/connectdialog.h \
     _view/selectmodeldialogui.h \
-    _view/showinfoframeui.h
+    _view/showinfoframeui.h \
+    chatframeui.h
 
 FORMS += \
     _view/connectdialog.ui \
     _view/selectmodeldialogui.ui \
-    _view/showinfoframeui.ui
+    _view/showinfoframeui.ui \
+    chatframeui.ui
 
 
 # Default rules for deployment.

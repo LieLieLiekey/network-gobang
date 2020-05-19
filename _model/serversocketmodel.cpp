@@ -15,9 +15,8 @@
 - 只能连接一个客户端
 -
 */
-ServerSocketModel::ServerSocketModel(RemoteControlInterface *remote_control)
+ServerSocketModel::ServerSocketModel(RemoteControlInterface *remote_control):SocketInterface(remote_control)
 {
-    _remote_control = remote_control;
     _selfname = "";
     _remote_name ="";
     _port = -1;

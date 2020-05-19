@@ -45,9 +45,8 @@ void ClientSocketModel::errorHandle()
     }
 
 }
-ClientSocketModel::ClientSocketModel(RemoteControlInterface * remote_control)
+ClientSocketModel::ClientSocketModel(RemoteControlInterface * remote_control):SocketInterface(remote_control)
 {
-    _remote_control = remote_control;
     _selfname = "";
     _remote_name ="";
     _port = -1;

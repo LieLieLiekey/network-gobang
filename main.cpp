@@ -12,12 +12,20 @@
 #include <QDebug>
 #include <QMessageBox>
 #include <clientnetworkcontrol.h>
+#include "chatframeui.h"
 int main(int argc, char *argv[])
 {
    QApplication a(argc, argv);
 
+   ChatFrameui dch;
+   dch.appendLine("dasdasdas");
+   dch.appendLine("dasdasdas");
+   dch.appendLine("dasdasdas");
+   dch.show();
+
+   /*
    ServerNetworkControl dch;
-   dch.start();
+   dch.start()*/;
 
    a.exec();
    return 0;

@@ -14,7 +14,7 @@ public:
     virtual void sendEXIT()override;
     virtual void sendGIVEUP()override;
     void sendPWOK();//发送pw和自己的名字
-    void writeData(char buf[],int len);
+    void writeData(char buf[],int len) override;
 
     void recvPOS(char buf[],int len);
     void recvEXIT(char buf[],int len);
@@ -34,12 +34,9 @@ public:
     int getServerPort();
     ~ServerSocketModel();
     static constexpr int BUFSIZE = 256;
-    static constexpr int sendbuf_size=16;
-     char send_buf [sendbuf_size];
 private:
    QString _selfname,_remote_name,_passwd,_ip;
    int _port;
-   RemoteControlInterface * _remote_control;
    QTcpServer * _server;
    QTcpSocket *_client;
    using STATE = enum{NO,READY,ACCPET,RECVPW,SENDPW,START,END};

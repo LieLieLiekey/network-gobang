@@ -20,7 +20,7 @@ public:
     virtual void sendEXIT();
     virtual void sendGIVEUP();
     virtual void sendMessage(QString); //new add
-    virtual void sendPWOK();//发送pw和自己的名字
+    
     virtual void sendPWOK(QString selfname);//发送pw和自己的名
     virtual void sendPW(QString passwd,QString selfname);
 
