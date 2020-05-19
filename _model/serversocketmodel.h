@@ -23,10 +23,12 @@ public:
 
     void readHanele(QTcpSocket *client); //自行
     void acceptHandle();
-    void close();
     void disConnectHandle(QTcpSocket *client);
+
     virtual QString getRemoteName()override;
     virtual bool alreadyBegin()override;
+
+    void close();
     bool start(QString name,QString passwd,int port,QString ip="localhost");
     QString getServerAddress();
     int getServerPort();
