@@ -4,3 +4,7 @@ ControlInterface::ControlInterface()
 {
 
 }
+ControlInterface::~ControlInterface()
+{
+
+}
