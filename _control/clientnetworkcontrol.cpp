@@ -2,6 +2,12 @@
 
 
 #include <QMessageBox>
+/*
+不定式：
+exit之后，界面关闭，但并不会析构
+结束游戏后，state为END
+未开始猴戏时，state未NOBEGIN
+*/
 ClientNetworkControl::ClientNetworkControl()
 {
     _state = CLIENT_STATE::C_NOBEGIN;
@@ -30,6 +36,24 @@ ClientNetworkControl::~ClientNetworkControl()
         delete blacker;
     if(clientmodel!=nullptr)
         delete clientmodel;
+}
+void ClientNetworkControl::start()
+{
+    _dialog = new ConnectDialog("Client - GoBang");
+    initDialog(_dialog);
+    _dialog -> exec() ;
+
+    if(_state == CLIENT_STATE::C_NOBEGIN)
+    {
+        /*fail*/
+        delete  _dialog;
+        _dialog = nullptr;
+        return ;
+    }
+    initGame(_dialog->getName(),clientmodel ->getRemoteName());
+    delete  _dialog;
+    _dialog = nullptr;
+    //开始newChesser空间等
 }
 void ClientNetworkControl::putChessSignal(Position pos)
 {
@@ -111,9 +135,9 @@ void ClientNetworkControl::timeOutSingal(ChessColorPro)
 void ClientNetworkControl::remotePutChessSignal(Position pos)
 {
     static Position tmppos;
-    if(boardmodel->getNowColor() == CLIENT_COLOR)
+    if(boardmodel->getNowColor() == SERVER_COLOR)
     {
-        boardmodel->putChess(pos,CLIENT_COLOR);
+        boardmodel->putChess(pos,SERVER_COLOR);
 
         if(boardmodel ->is_gameOver())
         {
@@ -129,14 +153,14 @@ void ClientNetworkControl::remoteGiveUpSignal()
 {
     end_flag = END_FLAGS::GAVEUP;
     _state = CLIENT_STATE::C_END;
-    gameOverHandle(CLIENT_COLOR);
+    gameOverHandle(CLIENT_COLOR);//自己胜利
 }
 
 void ClientNetworkControl::remoteExitSignal()
 {
     end_flag = END_FLAGS::GAVEUP;
     _state = CLIENT_STATE::C_END;
-    gameOverHandle(CLIENT_COLOR);
+    gameOverHandle(CLIENT_COLOR);//自己胜利
 }
 
 void ClientNetworkControl::remoteTimeOutSignal()
@@ -144,7 +168,7 @@ void ClientNetworkControl::remoteTimeOutSignal()
 {
     end_flag = END_FLAGS::TIMEOUT;
     _state = CLIENT_STATE::C_END;
-    gameOverHandle(CLIENT_COLOR);
+    gameOverHandle(CLIENT_COLOR);//自己胜利
 }
 
 void ClientNetworkControl::remoteDisConnectSignal()
@@ -163,24 +187,6 @@ void ClientNetworkControl::remotePasswdCurrect()
         _dialog->setStatus("connect server success !\n ip:***,port:***,wait begin.");
 }
 
-void ClientNetworkControl::start()
-{
-    _dialog = new ConnectDialog("Server - GoBang");
-    initDialog(_dialog);
-    _dialog -> exec() ;
-
-    if(_state == CLIENT_STATE::C_NOBEGIN)
-    {
-        /*fail*/
-        delete  _dialog;
-        _dialog = nullptr;
-        return ;
-    }
-    initGame(_dialog->getName(),clientmodel ->getRemoteName());
-    delete  _dialog;
-    _dialog = nullptr;
-    //开始newChesser空间等
-}
 void ClientNetworkControl::DialogEnterHandle(ConnectDialog *dialog)
 {
         QString ip = dialog->getIp();
@@ -297,6 +303,7 @@ void ClientNetworkControl::initGame(QString selfname,QString remotename,int time
 
         frame->show();
         /*显示窗体*/
+
 }
 
 void ClientNetworkControl::exitHandle()

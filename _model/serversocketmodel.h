@@ -40,7 +40,7 @@ private:
    RemoteControlInterface * _remote_control;
    QTcpServer * _server;
    QTcpSocket *_client;
-   using STATE = enum{S_NO,S_READY,S_ACCPET,S_RECVPW,S_SENDPW,S_START,S_END};
+   using STATE = enum{NO,READY,ACCPET,RECVPW,SENDPW,START,END};
    STATE _state;
 /*
  accept

@@ -3,19 +3,44 @@
 #include "remotecontrolinterface.h"
 #include <QString>
 /*
-区别：一个客户端，一个服务器
-服务器先发送PW，再接受PWOK
-    static constexpr int BUFSIZE = 256;
-    static constexpr int sendbuf_size=16;
-    char send_buf [sendbuf_size];
-    QString _selfname,_remote_name,_passwd,_ip;
-    int _port;
-    RemoteControlInterface * _remote_control;
-    QTcpSocket *_client;
-    using STATE = enum{S_NO,S_READY,S_ACCPET,S_RECVPW,S_SENDPW,S_START,S_END};
-    STATE _state;
+不定式：
+1._client 永远不为空
+- 收到远程信息会及时通知对面。
+- 发送PW后，state为SENDPW
+-接受到PWOK时，state为START
+- 当close或error时，state为NO
+- start时，state为READY
+-
 
 */
+#include <QMessageBox>
+void ClientSocketModel::errorHandle()
+{
+    QMessageBox msg;
+    QString info;
+    switch (_client->error())
+    {
+        case QAbstractSocket::SocketAddressNotAvailableError:
+            info ="SocketAddressNotAvailableError";
+            break;
+        case QAbstractSocket::HostNotFoundError:
+            break;
+        case QAbstractSocket::ConnectionRefusedError:
+            info = "ConnectionRefusedError";
+            break;
+
+        case QAbstractSocket::RemoteHostClosedError:
+            info = "RemoteHostClosedError";
+            break;
+        default:
+            info ="Socket Error.";
+    }
+    if(info !=""){
+        msg.setText(info);
+        msg.exec();
+    }
+
+}
 ClientSocketModel::ClientSocketModel(RemoteControlInterface * remote_control)
 {
     _remote_control = remote_control;
@@ -35,6 +60,10 @@ ClientSocketModel::ClientSocketModel(RemoteControlInterface * remote_control)
     connect(_client,&QAbstractSocket::disconnected,[&]{
        disConnectHandle(_client);
     });
+    connect(_client,QOverload<QAbstractSocket::SocketError>::of(&QAbstractSocket::error),[&]{
+        errorHandle();
+    });
+    _state = STATE::NO;
 }
 ClientSocketModel::~ClientSocketModel()
 {
@@ -82,7 +111,12 @@ void ClientSocketModel::sendPW()//发送pw和自己的名字
 }
 void ClientSocketModel::writeData(char buf[],int len)
 {
-    _client->write(buf,len);
+    static QByteArray writebytebuf;
+    writebytebuf.clear();
+    writebytebuf.append(char(len>>8));
+    writebytebuf.append(char(len&(0xff)));
+    writebytebuf.append(buf,len);
+    _client->write(writebytebuf);
     _client->flush();
 }
 
@@ -102,9 +136,12 @@ _remote_control ->remoteGiveUpSignal();
 }
 void ClientSocketModel::recvPWOK(char buf[],int len)
 {
+    //[flag,1][name]
     buf++,len--;//去除消息体
     _remote_name = "";
     for(int i=0;i<len;++i) _remote_name.append(buf[i]);
+    qDebug() << "reacvPWOK:" << _remote_name <<'\n';
+    _remote_control ->remotePasswdCurrect();
     _remote_control ->remoteBeginGameSignal();
     _state = STATE::START;
 }
@@ -127,19 +164,19 @@ void ClientSocketModel::readHanele(QTcpSocket *client)
         switch (buf[LEN_SIZE])
         {
         case MESSAGE_FLAGS::PWOK:
-                recvPWOK(buf + LEN_SIZE,datalen - LEN_SIZE);
+                recvPWOK(buf + LEN_SIZE,datalen);
             break;
         case MESSAGE_FLAGS::END:
                  /*no sign*/
             break;
         case MESSAGE_FLAGS::POS:
-            recvPOS(buf + LEN_SIZE,datalen - LEN_SIZE);
+            recvPOS(buf + LEN_SIZE,datalen);
             break;
         case MESSAGE_FLAGS::EXIT:
-            recvEXIT(buf + LEN_SIZE,datalen - LEN_SIZE);
+            recvEXIT(buf + LEN_SIZE,datalen);
             break;
         case MESSAGE_FLAGS::GIVEUP:
-            recvGIVEUP(buf + LEN_SIZE,datalen - LEN_SIZE);
+            recvGIVEUP(buf + LEN_SIZE,datalen);
             break;
         case MESSAGE_FLAGS::TIMEOUT:
             /*no operator*/
@@ -150,7 +187,7 @@ void ClientSocketModel::readHanele(QTcpSocket *client)
         }
         for(int i=0 ,j =datalen; j < tol ;++i,++j)
             buf[i]=buf[j];
-        tol -=datalen;
+        tol -=datalen+LEN_SIZE;
 
     }
 }
@@ -169,9 +206,11 @@ void ClientSocketModel::disConnectHandle(QTcpSocket *client)
     _remote_control ->remoteDisConnectSignal();
     _state = STATE::NO;
 }
+
 void ClientSocketModel::connectHandle(QTcpSocket *client)
 {
-   _remote_control->remoteBeginGameSignal();
+    qDebug() << client ->state() <<endl;
+    sendPW();
    _state = STATE::START;
 }
 bool ClientSocketModel::start(QString name,QString passwd,int port,QString ip)

@@ -23,6 +23,7 @@ public:
     void recvGIVEUP(char buf[],int len);
     void recvPWOK(char buf[],int len);
     void readHanele(QTcpSocket *client); //自行
+    void errorHandle();
     void close();
     void disConnectHandle(QTcpSocket *client);
     void connectHandle(QTcpSocket *client);

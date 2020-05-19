@@ -17,7 +17,7 @@ DEFINES += QT_DEPRECATED_WARNINGS
 msvc:QMAKE_CXXFLAGS += -execution-charset:utf-8
 msvc:QMAKE_CXXFLAGS += -source-charset:utf-8
 QMAKE_CXXFLAGS_WARN_ON += -wd4819
-SOURCES += \ \
+SOURCES += \
     _control/clientnetworkcontrol.cpp \
     _control/controlinterface.cpp \
     _control/localcontrol.cpp \
@@ -41,7 +41,7 @@ SOURCES += \ \
     _view/showinfoframeui.cpp \
     main.cpp
 
-HEADERS += \ \
+HEADERS += \
     _control/clientnetworkcontrol.h \
     _control/controlinterface.h \
     _control/localcontrol.h \
@@ -65,7 +65,7 @@ HEADERS += \ \
     _view/selectmodeldialogui.h \
     _view/showinfoframeui.h
 
-FORMS += \ \
+FORMS += \
     _view/connectdialog.ui \
     _view/selectmodeldialogui.ui \
     _view/showinfoframeui.ui
@@ -81,7 +81,7 @@ RESOURCES += \
 
 DISTFILES +=
 
-INCLUDEPATH += \ \
+INCLUDEPATH += \
 _control/ \
 _model/ \
 _view/ \

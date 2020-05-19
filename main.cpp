@@ -16,8 +16,9 @@ int main(int argc, char *argv[])
 {
    QApplication a(argc, argv);
 
-   ClientNetworkControl dch;
+   ServerNetworkControl dch;
    dch.start();
+
    a.exec();
    return 0;
 }
