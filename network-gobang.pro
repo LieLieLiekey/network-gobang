@@ -36,6 +36,7 @@ SOURCES += \
     _model/serversocketmodel.cpp \
     _model/socketinterface.cpp \
     _view/boardframe.cpp \
+    _view/chatframeui.cpp \
     _view/connectdialog.cpp \
     _view/selectmodeldialogui.cpp \
     _view/showinfoframeui.cpp \
@@ -61,11 +62,13 @@ HEADERS += \
     _model/serversocketmodel.h \
     _model/socketinterface.h \
     _view/boardframe.h \
+    _view/chatframeui.h \
     _view/connectdialog.h \
     _view/selectmodeldialogui.h \
     _view/showinfoframeui.h
 
 FORMS += \
+    _view/chatframeui.ui \
     _view/connectdialog.ui \
     _view/selectmodeldialogui.ui \
     _view/showinfoframeui.ui

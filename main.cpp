@@ -16,6 +16,9 @@ int main(int argc, char *argv[])
 {
    QApplication a(argc, argv);
 
+//   ClientNetworkControl dch;
+//   dch.initGame("me","other");
+
    ServerNetworkControl dch;
    dch.start();
 

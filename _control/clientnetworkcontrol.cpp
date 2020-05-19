@@ -21,6 +21,7 @@ ClientNetworkControl::ClientNetworkControl()
     showinfo_ui = nullptr;
     boardframe = nullptr;
     _dialog = nullptr;
+    chatframe = nullptr;
 }
 
 ClientNetworkControl::~ClientNetworkControl()
@@ -181,7 +182,15 @@ void ClientNetworkControl::remoteDisConnectSignal()
         remoteExitSignal();
 
 }
-
+void ClientNetworkControl::remoteMessageSignal(QString info)
+{
+    if(chatframe == nullptr){
+        errorHanle(EXCEPT_LEVEL::LOW,"没有开始,但是收到了Message.");
+    }
+    else{
+        chatframe ->appendMessage(clientmodel->getRemoteName(),info);
+    }
+}
 void ClientNetworkControl::remoteBeginGameSignal()
 {
     _state = CLIENT_STATE::C_SELF;
@@ -192,7 +201,18 @@ void ClientNetworkControl::remotePasswdCurrect()
 {
         _dialog->setStatus("connect server success !\n ip:***,port:***,wait begin.");
 }
-
+void ClientNetworkControl::sendMessagehandle()
+{
+    /*不忽略为空*/
+    QString msg= chatframe->getLineInfo();
+    chatframe->appendMessage("self",msg);
+    chatframe->clearlineInfo();
+    if(clientmodel->alreadyBegin())
+        clientmodel->sendMessage(msg);
+    else{
+        errorHanle(EXCEPT_LEVEL::LOW,"send message error.");
+    }
+}
 void ClientNetworkControl::DialogEnterHandle(ConnectDialog *dialog)
 {
         QString ip = dialog->getIp();
@@ -291,19 +311,23 @@ void ClientNetworkControl::initGame(QString selfname,QString remotename,int time
 
         boardframe = new BoardFrame(boardmodel,this,550,boardmodel->getBoardSize());
         showinfo_ui = new ShowInfoFrameUi(this,boardmodel,QString(blacker->getName().c_str()),QString(whiteer->getName().c_str()),timeout);
-
+        chatframe = new ChatFrameui;
         /*初始化model和view完毕*/
         boardmodel->addObserver(boardframe);
         boardmodel->addObserver(showinfo_ui);
         /*将观察者 注册 到 主题完毕*/
         frame = new QFrame();
         frame->setFixedSize(850,550);
+        chatframe->setFixedSize(showinfo_ui->width(),showinfo_ui->height()/3 );
+        chatframe->setParent(showinfo_ui);
         boardframe->setParent(frame);
         showinfo_ui->setParent(frame);
         boardframe->move(0,0);
         showinfo_ui->move(550,0);
-        /*UI窗口的组合完毕*/
+        chatframe->move(0,showinfo_ui->height()-chatframe->height());
 
+        /*UI窗口的组合完毕*/
+        connect(chatframe->getEnterButton(),&QAbstractButton::clicked,this,&ClientNetworkControl::sendMessagehandle);
         end_flag = END_FLAGS::RUN;
         /*初始化完毕*/
 

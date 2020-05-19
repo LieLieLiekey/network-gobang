@@ -130,6 +130,14 @@ void ClientSocketModel::recvPOS(char buf[],int len)
     int x = buf[0],y = buf[1];
     _remote_control ->remotePutChessSignal(Position(x,y));
 }
+void ClientSocketModel::recvMessage(char buf[],int len)
+{
+    len--,buf++;
+    QString msg;
+    for(int i=0;i<len;++i) msg.append(buf[i]);
+    _remote_control ->remoteMessageSignal(msg);
+}
+
 void ClientSocketModel::recvEXIT(char buf[],int len)
 {
      _remote_control ->remoteExitSignal();
@@ -184,6 +192,9 @@ void ClientSocketModel::readHanele(QTcpSocket *client)
             break;
         case MESSAGE_FLAGS::TIMEOUT:
             /*no operator*/
+            break;
+        case MESSAGE_FLAGS::MESSAGE:
+            recvMessage(buf + LEN_SIZE,datalen);
             break;
         default:
             break;

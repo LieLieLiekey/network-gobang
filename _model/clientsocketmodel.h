@@ -16,8 +16,9 @@ public:
     void sendEXIT()override;
     void sendGIVEUP()override;
     void sendPW();//发送pw和自己的名字
-    void writeData(char buf[],int len);
+    void writeData(char buf[],int len)override;
 
+    void recvMessage(char buf[],int len);
     void recvPOS(char buf[],int len);
     void recvEXIT(char buf[],int len);
     void recvGIVEUP(char buf[],int len);
@@ -38,8 +39,6 @@ public:
 private:
 
     static constexpr int BUFSIZE = 256;
-    static constexpr int sendbuf_size=16;
-    char send_buf [sendbuf_size];
     QString _selfname,_remote_name,_passwd,_ip;
     int _port;
     RemoteControlInterface * _remote_control;

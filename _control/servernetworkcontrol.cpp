@@ -14,6 +14,7 @@ ServerNetworkControl::ServerNetworkControl()
     frame = nullptr;
     showinfo_ui = nullptr;
     boardframe = nullptr;
+    chatframe = nullptr;
     _dialog = nullptr;
 
 }
@@ -147,7 +148,27 @@ void ServerNetworkControl::remoteTimeOutSignal()
     _state = SERVER_STATE::S_END;
     gameOverHandle(SERVER_COLOR);
 }
-
+void ServerNetworkControl::remoteMessageSignal(QString info)
+{
+    if(chatframe == nullptr){
+        errorHanle(EXCEPT_LEVEL::LOW,"没有开始,但是收到了Message.");
+    }
+    else{
+        chatframe ->appendMessage(servermodel->getRemoteName(),info);
+    }
+}
+void ServerNetworkControl::sendMessagehandle()
+{
+    /*不忽略为空*/
+    QString msg= chatframe->getLineInfo();
+    chatframe->appendMessage("self",msg);
+    chatframe->clearlineInfo();
+    if(servermodel->alreadyBegin())
+        servermodel->sendMessage(msg);
+    else{
+        errorHanle(EXCEPT_LEVEL::LOW,"send message error.");
+    }
+}
 void ServerNetworkControl::remoteDisConnectSignal()
 {
     if(end_flag==END_FLAGS::RUN)
@@ -187,6 +208,23 @@ void ServerNetworkControl::initDialog(ConnectDialog *dialog)
     dialog->getEnterButton()->setEnabled(true);
     dialog->getCancelButton()->setDisabled(true);
 }
+/*
+
+        frame = new QFrame();
+        frame->setFixedSize(850,550);
+        chatframe->setFixedSize(showinfo_ui->width(),showinfo_ui->height()/3 );
+        chatframe->setParent(showinfo_ui);
+        boardframe->setParent(frame);
+        showinfo_ui->setParent(frame);
+        boardframe->move(0,0);
+        showinfo_ui->move(550,0);
+        chatframe->move(0,showinfo_ui->height()-chatframe->height());
+
+
+        connect(chatframe->getEnterButton(),&QAbstractButton::clicked,this,&ClientNetworkControl::sendMessagehandle);
+        end_flag = END_FLAGS::RUN;
+
+*/
 void ServerNetworkControl::initGame(QString selfname,QString remotename,int timeout )
 {
     /*设置棋手完毕*/
@@ -196,19 +234,22 @@ void ServerNetworkControl::initGame(QString selfname,QString remotename,int time
 
     boardframe = new BoardFrame(boardmodel,this,550,boardmodel->getBoardSize());
     showinfo_ui = new ShowInfoFrameUi(this,boardmodel,QString(blacker->getName().c_str()),QString(whiteer->getName().c_str()),timeout);
-
+    chatframe = new ChatFrameui;
     /*初始化model和view完毕*/
     boardmodel->addObserver(boardframe);
     boardmodel->addObserver(showinfo_ui);
     /*将观察者 注册 到 主题完毕*/
     frame = new QFrame();
     frame->setFixedSize(850,550);
+    chatframe->setFixedSize(showinfo_ui->width(),showinfo_ui->height()/3 );
+    chatframe->setParent(showinfo_ui);
     boardframe->setParent(frame);
     showinfo_ui->setParent(frame);
     boardframe->move(0,0);
     showinfo_ui->move(550,0);
+    chatframe->move(0,showinfo_ui->height()-chatframe->height());
     /*UI窗口的组合完毕*/
-
+    connect(chatframe->getEnterButton(),&QAbstractButton::clicked,this,&ServerNetworkControl::sendMessagehandle);
     end_flag =END_FLAGS::RUN;
     /*初始化完毕*/
 

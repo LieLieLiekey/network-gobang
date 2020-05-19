@@ -12,6 +12,7 @@
 #include "boardmodel.h"
 #include "boardframe.h"
 #include "serversocketmodel.h"
+#include "chatframeui.h"
 class BoardModelInterface;
 class ControlInterface;
 
@@ -31,16 +32,18 @@ public:
     void remoteDisConnectSignal() override;
     void remoteBeginGameSignal() override;
     void remotePasswdCurrect() override;
+    void remoteMessageSignal(QString info) override;
     void start();
+    void initGame(QString selfname,QString remotename,int timeout = 600);
     ~ServerNetworkControl();
 private:
     using SERVER_STATE = enum{SW_PW,SW_NAME,SW_POS,S_NOBEGIN,S_END,S_SELF} ;
     SERVER_STATE _state;
+    void sendMessagehandle();
     void DialogEnterHandle(ConnectDialog *dialog);
     void DialogCancelHandle(ConnectDialog *dialog);
     void DialogExitHandle(ConnectDialog *dialog);
     void initDialog(ConnectDialog *dialog);
-    void initGame(QString selfname,QString remotename,int timeout = 600);
     void exitHandle();
     void gameOverHandle(ChessColorPro );//传入胜利着的颜色
     BoardModel * boardmodel;
@@ -50,6 +53,7 @@ private:
     QFrame *frame;
     ServerSocketModel * servermodel;
     ConnectDialog * _dialog;
+    ChatFrameui *chatframe;
     END_FLAGS end_flag;
 };
 

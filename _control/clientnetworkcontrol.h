@@ -12,6 +12,7 @@
 #include "boardframe.h"
 #include "showinfoframeui.h"
 #include "clientsocketmodel.h"
+#include "chatframeui.h"
 class BoardModelInterface;
 class ControlInterface;
 class ClientNetworkControl:public ControlInterface,public RemoteControlInterface,public QObject
@@ -29,7 +30,9 @@ public:
     void remoteDisConnectSignal() override;
     void remoteBeginGameSignal() override;
     void remotePasswdCurrect() override;
+    void remoteMessageSignal(QString info) override;
     void start();
+    void initGame(QString selfname,QString remotename,int timeout = 600);
     ~ClientNetworkControl();
 private :
     using  CLIENT_STATE = enum{C_NOBEGIN,CW_PWOK,CW_NAME,CW_POS,C_RUNING,C_END,C_SELF} ;
@@ -37,8 +40,8 @@ private :
     void DialogEnterHandle(ConnectDialog *dialog);
     void DialogCancelHandle(ConnectDialog *dialog);
     void DialogExitHandle(ConnectDialog *dialog);
+    void sendMessagehandle();
     void initDialog(ConnectDialog *dialog);
-    void initGame(QString selfname,QString remotename,int timeout = 600);
     void exitHandle();
     void gameOverHandle(ChessColorPro );
     BoardModel * boardmodel;
@@ -49,6 +52,7 @@ private :
     ClientSocketModel * clientmodel;
     ConnectDialog * _dialog;
     END_FLAGS end_flag;
+    ChatFrameui *chatframe;
 };
 
 #endif // CLIENTNETWORKCONTROL_H

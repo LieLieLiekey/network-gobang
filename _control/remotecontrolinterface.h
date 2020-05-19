@@ -13,6 +13,7 @@ public:
     virtual void remoteDisConnectSignal()=0;
     virtual void remoteBeginGameSignal()=0;
     virtual void remotePasswdCurrect()=0;
+    virtual void remoteMessageSignal(QString info)=0;
     using  EXCEPT_LEVEL = enum{NO,LOW,MID,HIGH,SERIOUS};
     virtual void errorHanle(EXCEPT_LEVEL level,QString errormsg);
     static constexpr ChessColorPro SERVER_COLOR = ChessColorPro::BLACK;

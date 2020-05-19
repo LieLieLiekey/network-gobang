@@ -15,6 +15,13 @@
 - 只能连接一个客户端
 -
 */
+void ServerSocketModel::recvMessage(char buf[],int len)
+{
+    len--,buf++;
+    QString msg;
+    for(int i=0;i<len;++i) msg.append(buf[i]);
+    _remote_control ->remoteMessageSignal(msg);
+}
 ServerSocketModel::ServerSocketModel(RemoteControlInterface *remote_control)
 {
     _remote_control = remote_control;
@@ -120,8 +127,11 @@ void ServerSocketModel::readHanele(QTcpSocket *client)
         case MESSAGE_FLAGS::TIMEOUT:
             /*no operator*/
             break;
+        case MESSAGE_FLAGS::MESSAGE:
+            recvMessage(buf + LEN_SIZE,datalen);
+            break;
         default:
-            qDebug() << "no sign!!!!!!1\n";
+            //qDebug() << "no sign!!!!!!1\n";
             break;
             // a error
         }
